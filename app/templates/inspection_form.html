@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}New Inspection - Shop Manager{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 900px;">
+    <div class="card-header">
+        <h2 class="card-title">New Inspection: {{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }} ({{ vehicle.license_plate or 'no plate' }})</h2>
+    </div>
+
+    <form hx-post="/inspections" hx-target="body" hx-swap="beforeend" hx-on::after-request="if(event.detail.successful) { alert('Inspection saved'); window.location.href='/inspections'; }">
+        <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>Date *</label>
+                <input type="date" name="date" value="{{ today }}" required>
+            </div>
+            <div class="form-group">
+                <label>Mileage</label>
+                <input type="number" name="mileage" value="{{ vehicle.mileage or '' }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>General Notes</label>
+            <textarea name="notes" rows="2" placeholder="Overall condition notes..."></textarea>
+        </div>
+
+        <h3 style="margin: 24px 0 16px; color: var(--accent); font-size: 0.9rem;">Inspection Items</h3>
+        <p style="color: var(--fg-muted); font-size: 0.8rem; margin-bottom: 16px;">Leave component blank to skip a row.</p>
+
+        <div id="inspection-items">
+            {% for i in range(15) %}
+            <div class="inspection-row" style="display: grid; grid-template-columns: 140px 180px 120px 1fr 160px 140px 100px 40px; gap: 8px; align-items: end; padding: 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px;">
+                <div class="form-group" style="margin:0;">
+                    <label>Category</label>
+                    <select name="category" style="padding: 8px 10px;">
+                        <option value="">—</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Component *</label>
+                    <input type="text" name="component" placeholder="e.g. Front brake pads" style="padding: 8px 10px;">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Condition</label>
+                    <select name="condition" style="padding: 8px 10px;">
+                        <option value="">—</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
+                        <option value="poor">Poor</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Notes</label>
+                    <input type="text" name="notes_item" placeholder="Details..." style="padding: 8px 10px;">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Recommended Action</label>
+                    <select name="recommended_action" style="padding: 8px 10px;">
+                        <option value="">—</option>
+                        <option value="replace">Replace</option>
+                        <option value="repair">Repair</option>
+                        <option value="monitor">Monitor</option>
+                        <option value="flush">Flush/Service</option>
+                        <option value="adjust">Adjust</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Urgency</label>
+                    <select name="urgency" style="padding: 8px 10px;">
+                        <option value="">—</option>
+                        <option value="immediate">Immediate</option>
+                        <option value="soon">Soon</option>
+                        <option value="next_service">Next Service</option>
+                        <option value="monitor">Monitor</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Est. Cost</label>
+                    <input type="number" name="estimated_cost" step="0.01" min="0" value="0" style="padding: 8px 10px;">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px; padding-top:16px; border-top:1px solid var(--border);">
+            <a href="/vehicles" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Inspection</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const today = new Date().toISOString().split('T')[0];
+document.querySelector('input[name="date"]').value = today;
+</script>
+{% endblock %}
