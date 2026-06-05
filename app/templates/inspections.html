@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Inspections - Shop Manager{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Inspections</h2>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Customer</th><th>Vehicle</th><th>Mileage</th><th>Items</th><th>Est. Total</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for i in inspections %}
+                <tr>
+                    <td>{{ i.date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ i.vehicle.customer.name }}</td>
+                    <td>{{ i.vehicle.year }} {{ i.vehicle.make }} {{ i.vehicle.model }}</td>
+                    <td>{{ i.mileage or '—' }}</td>
+                    <td>{{ i.items|length }}</td>
+                    <td>${{ "%.2f"|format(i.items|sum(attribute='estimated_cost')) }}</td>
+                    <td class="actions">
+                        <a href="/inspections/{{ i.id }}" class="btn btn-secondary btn-sm">View</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" style="text-align:center; color: var(--fg-muted); padding: 40px;">No inspections yet</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
