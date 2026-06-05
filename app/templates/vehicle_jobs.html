@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }} - Jobs{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }} ({{ vehicle.license_plate or 'no plate' }})</h2>
+        <div style="display:flex; gap:8px;">
+            <span style="color:var(--fg-muted); font-size:0.85rem;">{{ vehicle.customer.name }}</span>
+            <a href="/vehicles" class="btn btn-ghost btn-sm">← Back</a>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>#</th><th>Title</th><th>Status</th><th>Quoted</th><th>Actual</th><th>Balance</th><th>Date</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>#{{ job.id }}</td>
+                    <td>{{ job.title or '—' }}</td>
+                    <td><span class="badge badge-{{ job.status }}">{{ job.status }}</span></td>
+                    <td>${{ "%.2f"|format(job.quoted_total) }}</td>
+                    <td>${{ "%.2f"|format(job.actual_total) }}</td>
+                    <td>${{ "%.2f"|format(job.quoted_total - job.actual_total) }}</td>
+                    <td>{{ job.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td class="actions">
+                        <a href="/jobs/{{ job.id }}" class="btn btn-secondary btn-sm">Open</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" style="text-align:center; color: var(--fg-muted); padding: 40px;">No jobs for this vehicle</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top:24px;">
+        <button class="btn btn-primary" hx-get="/jobs/new?vehicle_id={{ vehicle.id }}&customer_id={{ vehicle.customer_id }}" hx-target="#modal" hx-swap="innerHTML" hx-on::after-request="document.getElementById('modal').showModal()">+ New Job for This Vehicle</button>
+    </div>
+</div>
+
+<dialog id="modal" class="modal-backdrop" style="display:none;">
+    <div class="modal" id="modal-content"></div>
+</dialog>
+
+<script>
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.detail.target.id === 'modal-content') {
+        document.getElementById('modal').showModal();
+    }
+});
+document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) this.close();
+});
+</script>
+{% endblock %}
