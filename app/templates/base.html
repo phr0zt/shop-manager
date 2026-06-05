@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Shop Manager{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/htmx.org@2.0.0" defer></script>
+    <script src="https://unpkg.com/alpinejs@3.14.1/defer" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Shop Manager</h1>
+        <nav>
+            <a href="/" class="{% if request.url.path == '/' %}active{% endif %}">Dashboard</a>
+            <a href="/customers" class="{% if request.url.path.startswith('/customers') %}active{% endif %}">Customers</a>
+            <a href="/vehicles" class="{% if request.url.path.startswith('/vehicles') %}active{% endif %}">Vehicles</a>
+            <a href="/inspections" class="{% if request.url.path.startswith('/inspections') %}active{% endif %}">Inspections</a>
+            <a href="/jobs" class="{% if request.url.path.startswith('/jobs') %}active{% endif %}">Jobs</a>
+            <a href="/export/tax" class="btn-primary btn-sm" style="margin-left: 16px;">Export Tax</a>
+        </nav>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
