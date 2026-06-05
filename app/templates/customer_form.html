@@ -1,0 +1,31 @@
+<form method="dialog" hx-put="/customers/{{ customer.id }}" hx-target="#customer-{{ customer.id }}" hx-swap="outerHTML" hx-on::after-request="document.getElementById('modal').close()">
+    <h3 style="margin-bottom: 20px;">Edit Customer</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Name *</label>
+            <input type="text" name="name" value="{{ customer.name }}" required>
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" name="phone" value="{{ customer.phone or '' }}">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ customer.email or '' }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Address</label>
+        <textarea name="address" rows="2">{{ customer.address or '' }}</textarea>
+    </div>
+    <div class="form-group">
+        <label>Notes</label>
+        <textarea name="notes" rows="3">{{ customer.notes or '' }}</textarea>
+    </div>
+    <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px;">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal').close()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
