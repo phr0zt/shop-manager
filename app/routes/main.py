@@ -42,6 +42,10 @@ def create_customer(request: Request, name: str = Form(...), phone: str = Form(N
     return HTMLResponse(f'<tr id="customer-{c.id}"><td>{c.name}</td><td>{c.phone or ""}</td><td>{c.email or ""}</td><td><button hx-get="/customers/{c.id}/edit" class="btn">Edit</button> <button hx-delete="/customers/{c.id}" hx-target="#customer-{c.id}" class="btn danger">Delete</button></td></tr>')
 
 
+@router.get("/customers/new", response_class=HTMLResponse)
+def new_customer_form(request: Request):
+    return request.app.templates.TemplateResponse("customer_form.html", {"request": request, "customer": None})
+
 @router.get("/customers/{id}/edit", response_class=HTMLResponse)
 def edit_customer_form(id: int, request: Request, db: Session = Depends(get_db)):
     c = get_or_404(db, Customer, id)
@@ -74,6 +78,11 @@ def vehicles_page(request: Request, customer_id: int = None, db: Session = Depen
     customers = db.query(Customer).order_by(Customer.name).all()
     return request.app.templates.TemplateResponse("vehicles.html", {"request": request, "vehicles": vehicles, "customers": customers, "selected_customer": customer_id})
 
+
+@router.get("/vehicles/new", response_class=HTMLResponse)
+def new_vehicle_form(request: Request, db: Session = Depends(get_db)):
+    customers = db.query(Customer).order_by(Customer.name).all()
+    return request.app.templates.TemplateResponse("vehicle_form.html", {"request": request, "customers": customers, "vehicle": None})
 
 @router.post("/vehicles", response_class=HTMLResponse)
 def create_vehicle(request: Request, customer_id: int = Form(...), make: str = Form(...), model: str = Form(...), year: int = Form(...), vin: str = Form(None), license_plate: str = Form(None), color: str = Form(None), mileage: int = Form(None), notes: str = Form(None), db: Session = Depends(get_db)):
