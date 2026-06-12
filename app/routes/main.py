@@ -44,7 +44,7 @@ def create_customer(request: Request, name: str = Form(...), phone: str = Form(N
 
 @router.get("/customers/new", response_class=HTMLResponse)
 def new_customer_form(request: Request):
-    return request.app.templates.TemplateResponse("customer_form.html", {"request": request, "customer": None})
+    return request.app.templates.TemplateResponse("customer_new_form.html", {"request": request})
 
 @router.get("/customers/{id}/edit", response_class=HTMLResponse)
 def edit_customer_form(id: int, request: Request, db: Session = Depends(get_db)):
