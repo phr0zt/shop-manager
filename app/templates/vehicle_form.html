@@ -1,0 +1,56 @@
+<form method="dialog" hx-post="/vehicles" hx-target="#vehicles-table tbody" hx-swap="afterbegin" hx-on::after-request="document.getElementById('modal').close()">
+    <h3 style="margin-bottom: 20px;">Add Vehicle</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Customer *</label>
+            <select name="customer_id" required>
+                <option value="">Select customer</option>
+                {% for c in customers %}
+                <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Year *</label>
+            <input type="number" name="year" min="1900" max="2030" value="{{ (2025) }}" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Make *</label>
+            <input type="text" name="make" required placeholder="e.g. Ford">
+        </div>
+        <div class="form-group">
+            <label>Model *</label>
+            <input type="text" name="model" required placeholder="e.g. F-150">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>VIN</label>
+            <input type="text" name="vin" placeholder="17 characters">
+        </div>
+        <div class="form-group">
+            <label>License Plate</label>
+            <input type="text" name="license_plate" placeholder="ABC1234">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Color</label>
+            <input type="text" name="color" placeholder="Blue">
+        </div>
+        <div class="form-group">
+            <label>Mileage</label>
+            <input type="number" name="mileage" min="0" placeholder="0">
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Notes</label>
+        <textarea name="notes" rows="2" placeholder="Optional notes..."></textarea>
+    </div>
+    <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px;">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal').close()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Vehicle</button>
+    </div>
+</form>
